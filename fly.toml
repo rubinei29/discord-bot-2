@@ -1,4 +1,4 @@
-# fly.toml file generated for batbot on 2023-03-30T16:35:05-03:00
+# fly.toml file generated for batbot on 2023-03-30T19:52:28-03:00
 
 app = "batbot"
 kill_signal = "SIGINT"
