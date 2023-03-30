@@ -1,6 +1,6 @@
 import * as dotenv from "dotenv";
 dotenv.config();
-import { MessageComponentInteraction, SlashCommandBuilder } from "discord.js";
+import { CacheType, ChatInputCommandInteraction, SlashCommandBuilder, Typing } from "discord.js";
 import openai from "../openai";
 import { Readable } from "node:stream";
 import { ChatCompletionRequestMessage } from "openai";
@@ -18,13 +18,11 @@ export const b = {
     .addStringOption((option) =>
       option.setName("mensagem").setDescription("Fala ae").setRequired(true)
     ),
-  async execute(interaction) {
+  async execute(interaction: ChatInputCommandInteraction<CacheType>) {
     const question = interaction.options.getString("mensagem")
 
-
-    await interaction.reply(`Q: ${question}:
-    
-...`);
+    await interaction.reply(`Q: ${question}:`);
+    await interaction.channel?.sendTyping()
     const answer = await getOpenApiResponse(interaction);
     await interaction.editReply(`Q: ${question}:
     
@@ -32,13 +30,13 @@ A: ${answer}`);
   },
 };
 
-const getOpenApiResponse = async (interaction) => {
+const getOpenApiResponse = async (interaction: ChatInputCommandInteraction<CacheType>) => {
   if (!messages[interaction.user.id]) messages[interaction.user.id] = [];
 
   messages[interaction.user.id].push({
     name: interaction.user.id,
     role: "user",
-    content: interaction.options.getString("mensagem"),
+    content: interaction.options.getString("mensagem") ?? '',
   });
 
   try {

@@ -3,7 +3,7 @@ import { b } from "./b";
 
 const list = [b];
 
-const commands = new Collection();
+const commands = new Collection<any, typeof b>();
 
 list.forEach((c) => commands.set(c.data.name, c));
 

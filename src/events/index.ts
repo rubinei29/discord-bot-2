@@ -1,11 +1,11 @@
 import commands from "../commands";
-import { Client, Events } from "discord.js";
+import { Client, Events, Interaction, InteractionType } from "discord.js";
 
 export default function handleEvents(client: Client<boolean>) {
-  client.on(Events.InteractionCreate, async (interaction) => {
+  client.on(Events.InteractionCreate, async (interaction: Interaction) => {
     if (!interaction.isChatInputCommand()) return;
 
-    const command: any = commands.get(interaction.commandName);
+    const command = commands.get(interaction.commandName);
 
     if (!command) {
       console.error(
