@@ -1,15 +1,6 @@
 import * as dotenv from "dotenv";
-import express from "express";
 dotenv.config();
 
-const app = express();
-app.get('/', (req, res) => {
-  res.send('Hello World!');
-});
-
-app.listen(() => {
-  console.log('Server listening on port 3000');
-});
 
 // Require the necessary discord classes
 import { Client, GatewayIntentBits, REST, Routes } from "discord.js";
