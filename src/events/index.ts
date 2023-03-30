@@ -1,14 +1,5 @@
 import commands from "../commands";
 import { Client, Events, Interaction, InteractionType } from "discord.js";
-import express from "express";
-
-const app = express();
-app.get('/', (req, res) => {
-  res.send('Hello World!');
-});
-
-
-
 
 export default function handleEvents(client: Client<boolean>) {
   client.on(Events.InteractionCreate, async (interaction: Interaction) => {
@@ -45,9 +36,5 @@ export default function handleEvents(client: Client<boolean>) {
   // We use 'c' for the event parameter to keep it separate from the already defined 'client'
   client.once(Events.ClientReady, (c) => {
     console.log(`Ready! Logged in as ${c.user.tag}`);
-
-    app.listen(() => {
-      console.log('Server listening on port 3000');
-    });
   });
 }
