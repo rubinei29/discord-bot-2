@@ -1,5 +1,5 @@
 import { REST, Routes } from "discord.js";
-import { comandos as commands } from "./commands/index.js";
+import { comandos as commands } from "./commands";
 
 export default async function ({ token, clientId }) {
   // Construct and prepare an instance of the REST module
@@ -14,10 +14,6 @@ export default async function ({ token, clientId }) {
     const data = await rest.put(Routes.applicationCommands(clientId), {
       body: commands,
     });
-
-    console.log(
-      `Successfully reloaded ${data.length} application (/) commands.`
-    );
   } catch (error) {
     // And of course, make sure you catch and log any errors!
     console.error(error);

@@ -1,11 +1,11 @@
-import * as dotenv from "dotenv"
-dotenv.config()
+import * as dotenv from "dotenv";
+dotenv.config();
 
-// Require the necessary discord.js classes
+// Require the necessary discord classes
 import { Client, Events, GatewayIntentBits } from "discord.js";
-import deployCommands from './deploy-commands.js'
+import deployCommands from "./deploy-commands";
 
-import commands from "./commands/index.js"
+import commands from "./commands";
 
 const token = process.env.DISCORD_TOKEN;
 const clientId = process.env.DISCORD_CLIENT_ID;
@@ -18,25 +18,10 @@ deployCommands({
   clientId,
 });
 
-client.commands = commands
-
-// const __filename = fileURLToPath(import.meta.url);
-// console.log(1, __filename)
-// const __dirname = path.dirname(__filename)
-// console.log(2, __dirname)
-
-// const foldersPath = path.join("file:///", __dirname, "commands");
-// console.log(3, foldersPath)
-
-// const formatPath =  foldersPath
-
-// const commandFolders = fs.readdirSync(foldersPath);
-
-
 client.on(Events.InteractionCreate, async (interaction) => {
   if (!interaction.isChatInputCommand()) return;
 
-  const command = interaction.client.commands.get(interaction.commandName);
+  const command: any = commands.get(interaction.commandName);
 
   if (!command) {
     console.error(`No command matching ${interaction.commandName} was found.`);
