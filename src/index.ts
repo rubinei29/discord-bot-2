@@ -7,8 +7,8 @@ app.get('/', (req, res) => {
   res.send('Hello World!');
 });
 
-app.listen(process.env.PORT ?? 8080, () => {
-  console.log('Server listening on port 8080');
+app.listen(() => {
+  console.log('Server listening on port 3000');
 });
 
 // Require the necessary discord classes
