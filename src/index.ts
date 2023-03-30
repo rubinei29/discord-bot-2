@@ -2,21 +2,31 @@ import * as dotenv from "dotenv";
 dotenv.config();
 
 // Require the necessary discord classes
-import { Client, Events, GatewayIntentBits } from "discord.js";
-import deployCommands from "./deploy-commands";
+import { Client, Events, GatewayIntentBits, REST, Routes } from "discord.js";
+import commands, {comandos} from "./commands";
 
-import commands from "./commands";
-
-const token = process.env.DISCORD_TOKEN;
-const clientId = process.env.DISCORD_CLIENT_ID;
+const token = process.env.DISCORD_TOKEN as string;
+const clientId = process.env.DISCORD_CLIENT_ID as string;
 
 // Create a new client instance
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 
-deployCommands({
-  token,
-  clientId,
-});
+(async () => {
+  const rest = new REST({ version: "10" }).setToken(token);
+
+  try {
+    console.log(
+      `Started refreshing ${comandos.length} application (/) commands.`
+    );
+    // The put method is used to fully refresh all commands in the guild with the current set
+    const data = await rest.put(Routes.applicationCommands(clientId), {
+      body: comandos,
+    });
+  } catch (error) {
+    // And of course, make sure you catch and log any errors!
+    console.error(error);
+  }
+})()
 
 client.on(Events.InteractionCreate, async (interaction) => {
   if (!interaction.isChatInputCommand()) return;
