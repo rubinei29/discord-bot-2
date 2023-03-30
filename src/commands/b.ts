@@ -1,6 +1,6 @@
 import * as dotenv from "dotenv";
 dotenv.config();
-import { SlashCommandBuilder } from "discord.js";
+import { MessageComponentInteraction, SlashCommandBuilder } from "discord.js";
 import openai from "../openai";
 import { Readable } from "node:stream";
 import { ChatCompletionRequestMessage } from "openai";
@@ -19,9 +19,16 @@ export const b = {
       option.setName("mensagem").setDescription("Fala ae").setRequired(true)
     ),
   async execute(interaction) {
-    await interaction.reply("...");
-    const result = await getOpenApiResponse(interaction);
-    await interaction.editReply(result);
+    const question = interaction.options.getString("mensagem")
+
+
+    await interaction.reply(`Q: ${question}:
+    
+...`);
+    const answer = await getOpenApiResponse(interaction);
+    await interaction.editReply(`Q: ${question}:
+    
+A: ${answer}`);
   },
 };
 
