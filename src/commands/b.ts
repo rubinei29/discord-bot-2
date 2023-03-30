@@ -19,7 +19,7 @@ export const b = {
       option.setName("mensagem").setDescription("Fala ae").setRequired(true)
     ),
   async execute(interaction) {
-    await interaction.reply("Calma ae");
+    await interaction.reply("...");
     const result = await getOpenApiResponse(interaction);
     await interaction.editReply(result);
   },
