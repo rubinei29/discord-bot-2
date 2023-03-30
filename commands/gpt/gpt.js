@@ -4,7 +4,6 @@ import { SlashCommandBuilder } from "discord.js";
 import { streamCompletion } from "@fortaine/openai/stream";
 import openai from "../../openai.js";
 
-
 export default {
   data: new SlashCommandBuilder()
     .setName("b")
@@ -14,42 +13,41 @@ export default {
     ),
   async execute(interaction) {
     await interaction.reply("Calma ae");
-    const result = await getOpenApiResponse(
-      interaction.options.getString("mensagem")
-    );
-    console.log(interaction)
-    await interaction.editReply(result, interaction.id);
+    const result = await getOpenApiResponse(interaction);
+    await interaction.editReply(result);
   },
 };
 
-const getOpenApiResponse = async (message, id) => {
-  console.log(id)
+const getOpenApiResponse = async (interaction) => {
   try {
-    const completion = await openai.createCompletion(
+    const completion = await openai.createChatCompletion(
       {
-        model: "text-davinci-003",
-        prompt: message,
+        model: "gpt-3.5-turbo",
+        messages: [
+          {
+            name: interaction.user.id,
+            role: "user",
+            content: interaction.options.getString("mensagem"),
+          },
+        ],
         max_tokens: 1500,
         temperature: 0,
         stream: true,
-        user: id
-
+        user: interaction.user.id
       },
       { responseType: "stream" }
     );
 
-    // await interaction.reply(message);
     let resposta = "";
 
     for await (const response of streamCompletion(completion.data)) {
       try {
         const parsed = JSON.parse(response);
-        const { text } = parsed.choices[0];
-        resposta += text;
+        resposta += parsed.choices[0].delta.content ?? "";
       } catch (error) {
         // console.error("Could not JSON parse stream message", response, error);
       }
-    } 
+    }
 
     return resposta;
   } catch (err) {
