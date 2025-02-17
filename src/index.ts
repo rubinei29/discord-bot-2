@@ -1,4 +1,5 @@
 import * as dotenv from "dotenv";
+import { startBot } from "./bot"
 dotenv.config();
 
 import express from "express";
@@ -25,6 +26,8 @@ const clientId = process.env.DISCORD_CLIENT_ID;
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 
 const rest = new REST({ version: "10" }).setToken(token);
+
+startBot(token)
 
 rest
   .put(Routes.applicationCommands(clientId), {
