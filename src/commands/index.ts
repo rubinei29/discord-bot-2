@@ -1,10 +1,10 @@
 import { Collection } from "discord.js";
-import { b } from "./b";
-import { v } from "./v";
+import ausente from './ausente'
+import voltar from './voltar'
 
-const list = [b, v];
+const list = [ausente, voltar];
 
-const commands = new Collection<any, typeof b>();
+const commands = new Collection<any, typeof ausente>();
 
 list.forEach((c) => commands.set(c.data.name, c));
 
