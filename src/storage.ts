@@ -12,6 +12,7 @@ export interface IStorage {
   removeMemberFromLobby(lobbyId: number, userId: string): Promise<void>;
   getLobbyMembers(lobbyId: number): Promise<LobbyMember[]>;
   updateMemberTimeout(lobbyId: number, userId: string, expiry: Date): Promise<void>;
+  clearLobbyMembers(lobbyId: number, userId: string): Promise<void>;
   
   // Queue operations
   addToQueue(lobbyId: number, userId: string): Promise<QueueMember>;
@@ -71,6 +72,10 @@ export class MemStorage implements IStorage {
       lobbyId,
       members.filter((m) => m.userId !== userId)
     );
+  }
+
+  async clearLobbyMembers(lobbyId: number): Promise<void> {
+    this.lobbyMembers.set(lobbyId, []);
   }
 
   async getLobbyMembers(lobbyId: number): Promise<LobbyMember[]> {

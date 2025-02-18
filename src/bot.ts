@@ -68,6 +68,7 @@ async function createLobbyButtons() {
       .setCustomId('leave_queue')
       .setLabel('Leave Queue')
       .setStyle(ButtonStyle.Secondary)
+
   );
 
   const row2 = new ActionRowBuilder<MessageActionRowComponentBuilder>();
@@ -79,7 +80,11 @@ async function createLobbyButtons() {
     new ButtonBuilder()
       .setCustomId('list_lobbies')
       .setLabel('List Lobbies')
-      .setStyle(ButtonStyle.Secondary)
+      .setStyle(ButtonStyle.Secondary),
+    new ButtonBuilder()
+      .setCustomId('clear_lobby')
+      .setLabel('Clear Lobby')
+      .setStyle(ButtonStyle.Danger)
   );
 
   return [row, row2];
@@ -342,6 +347,35 @@ async function handleInteraction(interaction: any) {
         content: response,
         flags: ['Ephemeral']
       });
+      break;
+    }
+    case 'clear_lobby' : {
+      const lobby = await storage.getActiveLobbyByChannel(channelId);
+      if (!lobby) {
+        await interaction.reply({
+          content: 'No active lobby found!',
+          flags: ['Ephemeral']
+        });
+        return;
+      }
+
+      const members = await storage.getLobbyMembers(lobby.id);
+      const member = members.find(m => m.userId === interaction.user.id);
+
+      if (!member) {
+        await interaction.reply({
+          content: 'You are not in this lobby!',
+          flags: ['Ephemeral']
+        });
+        return;
+      }
+
+      await storage.clearLobbyMembers(lobby.id);
+      await interaction.reply({
+        content: 'You have been removed from the lobby!',
+        flags: ['Ephemeral']
+      });
+      await updateLobbyStatus(channelId);
       break;
     }
   }
